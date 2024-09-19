@@ -7,10 +7,10 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>flashrpc-example</artifactId>
+    <artifactId>flashrpc-client</artifactId>
     <packaging>jar</packaging>
 
-    <name>flashrpc-example</name>
+    <name>flashrpc-client</name>
     <url>http://maven.apache.org</url>
 
     <properties>
@@ -21,11 +21,6 @@
         <dependency>
             <groupId>org.example</groupId>
             <artifactId>flashrpc-transport</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.example</groupId>
-            <artifactId>flashrpc-client</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

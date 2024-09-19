@@ -13,6 +13,7 @@
     <module>flashrpc-transport</module>
     <module>flashrpc-common</module>
     <module>flashrpc-example</module>
+    <module>flashrpc-client</module>
   </modules>
 
   <properties>
