@@ -11,14 +11,14 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import org.example.rpc.RpcRequest;
 import org.example.rpc.RpcResponse;
+import org.example.rpc.ServiceConfig;
 import org.example.transport.protocol.FlashRpcMessage;
 import org.example.transport.protocol.FlashRpcProtocol;
-import org.example.transport.service.CalculatorService;
-
 import java.lang.reflect.Proxy;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
+import java.io.File;
 
 public class FlashRpcClient {
 
@@ -29,10 +29,20 @@ public class FlashRpcClient {
     private final AtomicLong messageIdGenerator = new AtomicLong(0);
     private final ConcurrentHashMap<Long, CompletableFuture<FlashRpcMessage>> responseFutures = new ConcurrentHashMap<>();
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private ServiceConfig serviceConfig;
 
     public FlashRpcClient(String host, int port) {
         this.host = host;
         this.port = port;
+        loadServiceConfig();
+    }
+
+    private void loadServiceConfig() {
+        try {
+            this.serviceConfig = objectMapper.readValue(new File("rpc-services.json"), ServiceConfig.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to load service configuration", e);
+        }
     }
 
     public void start() throws Exception {
@@ -65,7 +75,7 @@ public class FlashRpcClient {
                 new Class<?>[]{serviceInterface},
                 (proxy, method, args) -> {
                     long messageId = messageIdGenerator.incrementAndGet();
-                    RpcRequest request = new RpcRequest(method.getName(), args);
+                    RpcRequest request = new RpcRequest(serviceInterface.getName(), method.getName(), method.getParameterTypes(), args);
                     byte[] requestBody = objectMapper.writeValueAsBytes(request);
 
                     FlashRpcMessage message = new FlashRpcMessage();
@@ -82,6 +92,9 @@ public class FlashRpcClient {
                     
                     // 解析响应
                     RpcResponse rpcResponse = objectMapper.readValue(response.getBody(), RpcResponse.class);
+                    if (rpcResponse.hasException()) {
+                        throw rpcResponse.getException();
+                    }
                     return rpcResponse.getResult();
                 }
         );

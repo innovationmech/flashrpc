@@ -1,16 +1,17 @@
 package org.example.rpc;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class RpcResponse {
-
     private Object result;
+    private Throwable exception;
 
-    public RpcResponse() {}
-
-    public RpcResponse(Object result) {
-        this.result = result;
+    public boolean hasException() {
+        return exception != null;
     }
-
-    // Getter and setter
-    public Object getResult() { return result; }
-    public void setResult(Object result) { this.result = result; }
 }

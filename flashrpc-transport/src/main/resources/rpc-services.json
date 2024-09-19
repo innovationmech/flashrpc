@@ -1,0 +1,30 @@
+{
+  "services": [
+    {
+      "interfaceName": "org.example.transport.service.CalculatorService",
+      "implementationClass": "org.example.transport.service.impl.CalculatorServiceImpl",
+      "methods": [
+        {
+          "name": "add",
+          "parameterTypes": ["int", "int"],
+          "returnType": "int"
+        },
+        {
+          "name": "subtract",
+          "parameterTypes": ["int", "int"],
+          "returnType": "int"
+        },
+        {
+          "name": "multiply",
+          "parameterTypes": ["int", "int"],
+          "returnType": "int"
+        },
+        {
+          "name": "divide",
+          "parameterTypes": ["int", "int"],
+          "returnType": "int"
+        }
+      ]
+    }
+  ]
+}

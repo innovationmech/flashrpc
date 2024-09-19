@@ -8,14 +8,37 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import org.example.rpc.ServiceConfig;
+import org.example.rpc.ServiceDefinition;
 import org.example.transport.protocol.FlashRpcProtocol;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FlashRpcServer {
 
     private final int port;
+    private final Map<String, Object> serviceInstances = new HashMap<>();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public FlashRpcServer(int port) {
         this.port = port;
+        loadServices();
+    }
+
+    private void loadServices() {
+        try {
+            ServiceConfig config = objectMapper.readValue(new File("rpc-services.json"), ServiceConfig.class);
+            for (ServiceDefinition serviceDef : config.getServices()) {
+                Class<?> interfaceClass = Class.forName(serviceDef.getInterfaceName());
+                Class<?> implementationClass = Class.forName(serviceDef.getImplementationClass());
+                Object instance = implementationClass.getDeclaredConstructor().newInstance();
+                serviceInstances.put(serviceDef.getInterfaceName(), instance);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to load services", e);
+        }
     }
 
     public void start() throws Exception {
@@ -39,7 +62,7 @@ public class FlashRpcServer {
                     public void initChannel(SocketChannel ch) {
                         ch.pipeline()
                                 .addLast(new FlashRpcProtocol())
-                                .addLast(new FlashRpcServerHandler());
+                                .addLast(new FlashRpcServerHandler(serviceInstances));
                     }
                 })
                 .option(ChannelOption.SO_BACKLOG, 128)

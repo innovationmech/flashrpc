@@ -1,20 +1,15 @@
 package org.example.rpc;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class RpcRequest {
-
+    private String interfaceName;
     private String methodName;
+    private Class<?>[] paramTypes;
     private Object[] params;
-
-    public RpcRequest() {}
-
-    public RpcRequest(String methodName, Object[] params) {
-        this.methodName = methodName;
-        this.params = params;
-    }
-
-    // Getters and setters
-    public String getMethodName() { return methodName; }
-    public void setMethodName(String methodName) { this.methodName = methodName; }
-    public Object[] getParams() { return params; }
-    public void setParams(Object[] params) { this.params = params; }
 }
