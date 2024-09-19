@@ -39,7 +39,7 @@ public class FlashRpcClient {
 
     private void loadServiceConfig() {
         try {
-            this.serviceConfig = objectMapper.readValue(new File("rpc-services.json"), ServiceConfig.class);
+            this.serviceConfig = objectMapper.readValue(getClass().getClassLoader().getResourceAsStream("rpc-services.json"), ServiceConfig.class);
         } catch (Exception e) {
             throw new RuntimeException("Failed to load service configuration", e);
         }

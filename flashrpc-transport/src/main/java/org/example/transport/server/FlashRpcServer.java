@@ -29,7 +29,7 @@ public class FlashRpcServer {
 
     private void loadServices() {
         try {
-            ServiceConfig config = objectMapper.readValue(new File("rpc-services.json"), ServiceConfig.class);
+            ServiceConfig config = objectMapper.readValue(getClass().getClassLoader().getResourceAsStream("rpc-services.json"), ServiceConfig.class);
             for (ServiceDefinition serviceDef : config.getServices()) {
                 Class<?> interfaceClass = Class.forName(serviceDef.getInterfaceName());
                 Class<?> implementationClass = Class.forName(serviceDef.getImplementationClass());
