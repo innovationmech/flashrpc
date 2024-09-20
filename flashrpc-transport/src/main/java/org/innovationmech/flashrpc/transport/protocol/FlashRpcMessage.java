@@ -4,7 +4,7 @@ public class FlashRpcMessage {
 
     public static final byte MESSAGE_TYPE_REQUEST = 1;
     public static final byte MESSAGE_TYPE_RESPONSE = 2;
-    public static final byte MESSAGE_TYPE_HEARTBEAT = 3;
+    public static final byte MESSAGE_TYPE_HEARTBEAT = 3; // 将心跳消息类型改为3
 
     public static final byte SERIALIZATION_JSON = 1;
     public static final byte SERIALIZATION_PROTOBUF = 2;
