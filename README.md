@@ -45,7 +45,7 @@ public class CalculatorServiceImpl implements CalculatorService {
 
     @Override
     public int multiply(int a, int b) {
-        return a b;
+        return a*b;
     }
 
     @Override
@@ -98,15 +98,17 @@ FlashRpcClient client = new FlashRpcClientBuilder()
 
 2. 调用远程服务:
 ```java
-CalculatorService calculatorService = client.create(CalculatorService.class);
-int result = calculatorService.add(5, 3);
-System.out.println("5 + 3 = " + result);
-result = calculatorService.subtract(10, 4);
-System.out.println("10 - 4 = " + result);
-result = calculatorService.multiply(6, 7);
-System.out.println("6 7 = " + result);
-result = calculatorService.divide(20, 5);
-System.out.println("20 / 5 = " + result);
+public static void main(String[] args) {
+    CalculatorService calculatorService = client.create(CalculatorService.class);
+    int result = calculatorService.add(5, 3);
+    System.out.println("5 + 3 = " + result);
+    result = calculatorService.subtract(10, 4);
+    System.out.println("10 - 4 = " + result);
+    result = calculatorService.multiply(6, 7);
+    System.out.println("6 7 = " + result);
+    result = calculatorService.divide(20, 5);
+    System.out.println("20 / 5 = " + result);
+}
 ```
 
 ## 构建和运行
@@ -142,3 +144,6 @@ FlashRPC 使用 Java SPI 机制来加载服务实现。要添加新的服务,只
 ## 贡献
 
 欢迎提交问题和拉取请求。对于重大更改,请先开issue讨论您想要更改的内容。
+
+## 许可证
+本项目采用 MIT 许可证。详情请参阅 [LICENSE](LICENSE) 文件。
