@@ -37,20 +37,28 @@ public class FlashRpcProxy implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         long messageId = messageIdGenerator.incrementAndGet();
-        RpcRequest request = new RpcRequest(serviceInterface.getName(), method.getName(), method.getParameterTypes(), args);
         byte[] requestBody;
         byte serializationType;
 
-        Serializer serializer;
+        String serviceName = serviceInterface.getName();
+        String methodName = method.getName();
+
         if (isProtobufMessage(args)) {
-            serializer = protobufSerializer;
+            byte[] protoBody = protobufSerializer.serialize(args[0]);
+            byte[] serviceNameBytes = serviceName.getBytes();
+            byte[] methodNameBytes = methodName.getBytes();
+            requestBody = new byte[2 + serviceNameBytes.length + methodNameBytes.length + protoBody.length];
+            requestBody[0] = (byte) serviceNameBytes.length;
+            requestBody[1] = (byte) methodNameBytes.length;
+            System.arraycopy(serviceNameBytes, 0, requestBody, 2, serviceNameBytes.length);
+            System.arraycopy(methodNameBytes, 0, requestBody, 2 + serviceNameBytes.length, methodNameBytes.length);
+            System.arraycopy(protoBody, 0, requestBody, 2 + serviceNameBytes.length + methodNameBytes.length, protoBody.length);
             serializationType = FlashRpcMessage.SERIALIZATION_PROTOBUF;
         } else {
-            serializer = jsonSerializer;
+            RpcRequest request = new RpcRequest(serviceName, methodName, method.getParameterTypes(), args);
+            requestBody = jsonSerializer.serialize(request);
             serializationType = FlashRpcMessage.SERIALIZATION_JSON;
         }
-
-        requestBody = serializer.serialize(request);
 
         FlashRpcMessage message = new FlashRpcMessage();
         message.setMessageId(messageId);
@@ -63,11 +71,15 @@ public class FlashRpcProxy implements InvocationHandler {
         if (response.getSerializationType() == FlashRpcMessage.SERIALIZATION_PROTOBUF) {
             return protobufSerializer.deserialize(response.getBody(), method.getReturnType());
         } else {
-            return jsonSerializer.deserialize(response.getBody(), RpcResponse.class);
+            RpcResponse rpcResponse = (RpcResponse) jsonSerializer.deserialize(response.getBody(), RpcResponse.class);
+            if (rpcResponse.getException() != null) {
+                throw rpcResponse.getException();
+            }
+            return rpcResponse.getResult();
         }
     }
 
     private boolean isProtobufMessage(Object[] args) {
-        return args != null && args.length > 0 && args[0] instanceof Message;
+        return args != null && args.length == 1 && args[0] instanceof Message;
     }
 }

@@ -1,4 +1,4 @@
-package org.innovationmech.flashrpc.example.server;
+package org.innovationmech.flashrpc.example.server.service;
 
 import org.innovationmech.flashrpc.common.rpc.spi.RpcServiceProvider;
 import org.innovationmech.flashrpc.example.common.service.CalculatorService;

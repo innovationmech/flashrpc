@@ -1,4 +1,4 @@
-package org.innovationmech.flashrpc.example.server;
+package org.innovationmech.flashrpc.example.server.service.impl;
 
 import org.innovationmech.flashrpc.example.common.service.UserService;
 import org.innovationmech.flashrpc.example.proto.UserProto.User;

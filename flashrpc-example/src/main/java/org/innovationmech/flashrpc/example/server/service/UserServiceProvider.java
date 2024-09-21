@@ -1,7 +1,8 @@
-package org.innovationmech.flashrpc.example.server;
+package org.innovationmech.flashrpc.example.server.service;
 
 import org.innovationmech.flashrpc.common.rpc.spi.RpcServiceProvider;
 import org.innovationmech.flashrpc.example.common.service.UserService;
+import org.innovationmech.flashrpc.example.server.service.impl.UserServiceImpl;
 
 public class UserServiceProvider implements RpcServiceProvider {
     @Override
