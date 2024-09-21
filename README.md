@@ -5,9 +5,8 @@ FlashRPC is a lightweight RPC (Remote Procedure Call) framework based on Netty. 
 ## Features
 
 - High-performance network transmission based on Netty
-- Supports JSON serialization
-- Simple service registration and discovery mechanism
-- Easy-to-use client API
+- Supports JSON and Protobuf serialization
+
 
 ## Project Structure
 
