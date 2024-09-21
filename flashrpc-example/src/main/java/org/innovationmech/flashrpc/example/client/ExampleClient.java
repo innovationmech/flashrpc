@@ -3,6 +3,11 @@ package org.innovationmech.flashrpc.example.client;
 import org.innovationmech.flashrpc.client.FlashRpcClient;
 import org.innovationmech.flashrpc.client.FlashRpcClientBuilder;
 import org.innovationmech.flashrpc.example.common.service.CalculatorService;
+import org.innovationmech.flashrpc.example.common.service.UserService;
+import org.innovationmech.flashrpc.example.proto.UserProto.GetUserRequest;
+import org.innovationmech.flashrpc.example.proto.UserProto.GetUserResponse;
+import org.innovationmech.flashrpc.example.proto.UserProto.CreateUserRequest;
+import org.innovationmech.flashrpc.example.proto.UserProto.CreateUserResponse;
 
 public class ExampleClient {
 
@@ -13,6 +18,7 @@ public class ExampleClient {
                 .build();
 
         try {
+            // CalculatorService 调用
             CalculatorService calculatorService = client.create(CalculatorService.class);
             int result = calculatorService.add(5, 3);
             System.out.println("5 + 3 = " + result);
@@ -25,6 +31,25 @@ public class ExampleClient {
 
             result = calculatorService.divide(20, 5);
             System.out.println("20 / 5 = " + result);
+
+            // UserService 调用
+            UserService userService = client.create(UserService.class);
+
+            // 获取用户
+            GetUserRequest getUserRequest = GetUserRequest.newBuilder()
+                .setUserId(1)
+                .build();
+            GetUserResponse getUserResponse = userService.getUser(getUserRequest);
+            System.out.println("获取到的用户: " + getUserResponse.getUser().getName());
+
+            // 创建用户
+            CreateUserRequest createUserRequest = CreateUserRequest.newBuilder()
+                .setName("张三")
+                .setEmail("zhangsan@example.com")
+                .build();
+            CreateUserResponse createUserResponse = userService.createUser(createUserRequest);
+            System.out.println("创建的用户ID: " + createUserResponse.getUser().getId());
+            
         } finally {
             client.stop();
         }
