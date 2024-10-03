@@ -1,2 +1,3 @@
 org.innovationmech.flashrpc.example.server.service.CalculatorServiceProvider
 org.innovationmech.flashrpc.example.server.service.UserServiceProvider
+org.innovationmech.flashrpc.example.server.service.GreetServiceProvider

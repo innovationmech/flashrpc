@@ -3,7 +3,10 @@ package org.innovationmech.flashrpc.example.client;
 import org.innovationmech.flashrpc.client.FlashRpcClient;
 import org.innovationmech.flashrpc.client.FlashRpcClientBuilder;
 import org.innovationmech.flashrpc.example.common.service.CalculatorService;
+import org.innovationmech.flashrpc.example.common.service.GreetService;
 import org.innovationmech.flashrpc.example.common.service.UserService;
+import org.innovationmech.flashrpc.example.proto.GreetProto.GreetResponse;
+import org.innovationmech.flashrpc.example.proto.GreetProto.GreetRequest;
 import org.innovationmech.flashrpc.example.proto.UserProto.GetUserRequest;
 import org.innovationmech.flashrpc.example.proto.UserProto.GetUserResponse;
 import org.innovationmech.flashrpc.example.proto.UserProto.CreateUserRequest;
@@ -49,7 +52,11 @@ public class ExampleClient {
                 .build();
             CreateUserResponse createUserResponse = userService.createUser(createUserRequest);
             System.out.println("创建的用户ID: " + createUserResponse.getUser().getId());
-            
+
+            // GreetService 调用
+            GreetService greetService = client.create(GreetService.class);
+            GreetResponse greetResponse = greetService.greet(GreetRequest.newBuilder().setMsg("FlashRPC").build());
+            System.out.println("Greet: " + greetResponse.getMsg());
         } finally {
             client.stop();
         }

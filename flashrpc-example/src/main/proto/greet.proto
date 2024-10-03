@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package example;
+
+option java_package = "org.innovationmech.flashrpc.example.proto";
+option java_outer_classname = "GreetProto";
+
+message GreetRequest {
+  string msg = 1;
+}
+
+message GreetResponse {
+  string msg = 1;
+}
