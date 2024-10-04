@@ -55,8 +55,10 @@ public class FlashRpcServer {
                                 .addLast(new FlashRpcServerHandler(serviceRegistry));
                     }
                 })
-                .option(ChannelOption.SO_BACKLOG, 128)
-                .childOption(ChannelOption.SO_KEEPALIVE, true);
+                .option(ChannelOption.SO_BACKLOG, 1024)
+                .option(ChannelOption.SO_REUSEADDR, true)
+                .childOption(ChannelOption.SO_KEEPALIVE, true)
+                .childOption(ChannelOption.TCP_NODELAY, true);
     }
 
     private ChannelFuture bindAndWait(ServerBootstrap bootstrap) throws InterruptedException {
